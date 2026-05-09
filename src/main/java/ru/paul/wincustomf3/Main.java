@@ -7,9 +7,11 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import java.nio.file.Path;
+import java.util.List;
 import org.slf4j.Logger;
 import ru.paul.wincustomf3.brand.BrandService;
-import ru.paul.wincustomf3.command.WinCustomF3Command;
+import ru.paul.wincustomf3.command.MainCommand;
+import ru.paul.wincustomf3.command.impl.ReloadArgument;
 import ru.paul.wincustomf3.config.ConfigLoadException;
 import ru.paul.wincustomf3.config.ConfigManager;
 import ru.paul.wincustomf3.config.PluginConfig;
@@ -22,14 +24,14 @@ import ru.paul.wincustomf3.listener.BrandListener;
         description = "Настраиваемый F3 brand для Velocity",
         authors = {"paul"}
 )
-public final class WinCustomF3Plugin {
+public final class Main {
 
     private final ProxyServer proxyServer;
     private final Logger logger;
     private final Path dataDirectory;
 
     @Inject
-    public WinCustomF3Plugin(
+    public Main(
             final ProxyServer proxyServer,
             final Logger logger,
             @DataDirectory final Path dataDirectory
@@ -45,7 +47,7 @@ public final class WinCustomF3Plugin {
         final PluginConfig initialConfig = loadInitialConfig(configManager);
         final BrandService brandService = new BrandService(initialConfig);
 
-        proxyServer.getChannelRegistrar().register(BrandListener.BRAND_CHANNEL);
+        proxyServer.getChannelRegistrar().register(BrandListener.brandChannel);
         proxyServer.getEventManager().register(this, new BrandListener(brandService, logger));
 
         proxyServer.getCommandManager().register(
@@ -53,7 +55,9 @@ public final class WinCustomF3Plugin {
                         .metaBuilder("wincustomf3")
                         .plugin(this)
                         .build(),
-                new WinCustomF3Command(configManager, brandService, logger)
+                new MainCommand(List.of(
+                        new ReloadArgument(configManager, brandService, logger)
+                ))
         );
 
         logger.info("WinCustomF3 загружен. Текущий F3 brand: {}", brandService.getCurrentBrandText());
@@ -68,4 +72,3 @@ public final class WinCustomF3Plugin {
         }
     }
 }
-

@@ -70,7 +70,7 @@ public final class ConfigManager {
     }
 
     private PluginConfig parseConfig(final Map<?, ?> rootMap) {
-        final String brand = readString(rootMap, "brand", PluginConfig.DEFAULT_BRAND);
+        final String brand = readString(rootMap, "brand", PluginConfig.defaultBrand);
 
         final Map<?, ?> animationMap = readMap(rootMap, "animation");
         final boolean animationEnabled = readBoolean(animationMap, "enabled", false);
@@ -150,4 +150,3 @@ public final class ConfigManager {
         return result;
     }
 }
-

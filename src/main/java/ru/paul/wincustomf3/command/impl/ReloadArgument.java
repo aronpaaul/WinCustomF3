@@ -1,23 +1,22 @@
-package ru.paul.wincustomf3.command;
+package ru.paul.wincustomf3.command.impl;
 
 import com.velocitypowered.api.command.SimpleCommand;
-import java.util.Collections;
-import java.util.List;
 import org.slf4j.Logger;
 import ru.paul.wincustomf3.brand.BrandService;
+import ru.paul.wincustomf3.command.CommandArgument;
 import ru.paul.wincustomf3.config.ConfigLoadException;
 import ru.paul.wincustomf3.config.ConfigManager;
 import ru.paul.wincustomf3.config.PluginConfig;
 
-public final class WinCustomF3Command implements SimpleCommand {
+public final class ReloadArgument implements CommandArgument {
 
-    private static final String RELOAD_PERMISSION = "wincustomf3.command.reload";
+    private static final String reloadPermission = "wincustomf3.command.reload";
 
     private final ConfigManager configManager;
     private final BrandService brandService;
     private final Logger logger;
 
-    public WinCustomF3Command(
+    public ReloadArgument(
             final ConfigManager configManager,
             final BrandService brandService,
             final Logger logger
@@ -28,40 +27,22 @@ public final class WinCustomF3Command implements SimpleCommand {
     }
 
     @Override
-    public void execute(final Invocation invocation) {
-        if (!invocation.source().hasPermission(RELOAD_PERMISSION)) {
-            invocation.source().sendRichMessage("<red>Нет прав. Нужна permission <white>" + RELOAD_PERMISSION + "</white>.</red>");
-            return;
-        }
-
-        final String[] arguments = invocation.arguments();
-        if (arguments.length == 1 && arguments[0].equalsIgnoreCase("reload")) {
-            reload(invocation);
-            return;
-        }
-
-        invocation.source().sendRichMessage("<red>Использование: <white>/wincustomf3 reload</white></red>");
+    public String name() {
+        return "reload";
     }
 
     @Override
-    public List<String> suggest(final Invocation invocation) {
-        if (!invocation.source().hasPermission(RELOAD_PERMISSION)) {
-            return Collections.emptyList();
-        }
-
-        if (invocation.arguments().length == 0) {
-            return List.of("reload");
-        }
-
-        if (invocation.arguments().length == 1) {
-            final String current = invocation.arguments()[0].toLowerCase();
-            return "reload".startsWith(current) ? List.of("reload") : Collections.emptyList();
-        }
-
-        return Collections.emptyList();
+    public String permission() {
+        return reloadPermission;
     }
 
-    private void reload(final Invocation invocation) {
+    @Override
+    public void execute(final SimpleCommand.Invocation invocation) {
+        if (invocation.arguments().length != 1) {
+            invocation.source().sendRichMessage("<red>Использование: <white>/wincustomf3 reload</white></red>");
+            return;
+        }
+
         try {
             final PluginConfig pluginConfig = configManager.load();
             brandService.updateConfig(pluginConfig);

@@ -11,7 +11,7 @@ public record FormattingState(
         boolean italic
 ) {
 
-    private static final char SECTION = '\u00A7';
+    private static final char section = '\u00A7';
 
     public static FormattingState empty() {
         return new FormattingState(null, false, false, false, false, false);
@@ -21,7 +21,7 @@ public record FormattingState(
         return switch (code) {
             case '0', '1', '2', '3', '4', '5', '6', '7',
                     '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' -> new FormattingState(
-                    String.valueOf(SECTION) + code,
+                    String.valueOf(section) + code,
                     false,
                     false,
                     false,
@@ -52,11 +52,11 @@ public record FormattingState(
         }
 
         if (isEmpty()) {
-            return previousState.isEmpty() ? "" : String.valueOf(SECTION) + 'r';
+            return previousState.isEmpty() ? "" : String.valueOf(section) + 'r';
         }
 
         if (needsReset(previousState)) {
-            return String.valueOf(SECTION) + 'r' + fullCodes();
+            return String.valueOf(section) + 'r' + fullCodes();
         }
 
         if (!Objects.equals(colorCode, previousState.colorCode) && colorCode != null) {
@@ -98,19 +98,19 @@ public record FormattingState(
         final StringBuilder builder = new StringBuilder();
 
         if (obfuscated) {
-            builder.append(SECTION).append('k');
+            builder.append(section).append('k');
         }
         if (bold) {
-            builder.append(SECTION).append('l');
+            builder.append(section).append('l');
         }
         if (strikethrough) {
-            builder.append(SECTION).append('m');
+            builder.append(section).append('m');
         }
         if (underlined) {
-            builder.append(SECTION).append('n');
+            builder.append(section).append('n');
         }
         if (italic) {
-            builder.append(SECTION).append('o');
+            builder.append(section).append('o');
         }
 
         return builder.toString();
@@ -120,19 +120,19 @@ public record FormattingState(
         final StringBuilder builder = new StringBuilder();
 
         if (obfuscated && !previousState.obfuscated) {
-            builder.append(SECTION).append('k');
+            builder.append(section).append('k');
         }
         if (bold && !previousState.bold) {
-            builder.append(SECTION).append('l');
+            builder.append(section).append('l');
         }
         if (strikethrough && !previousState.strikethrough) {
-            builder.append(SECTION).append('m');
+            builder.append(section).append('m');
         }
         if (underlined && !previousState.underlined) {
-            builder.append(SECTION).append('n');
+            builder.append(section).append('n');
         }
         if (italic && !previousState.italic) {
-            builder.append(SECTION).append('o');
+            builder.append(section).append('o');
         }
 
         return builder.toString();
@@ -141,13 +141,12 @@ public record FormattingState(
     private static String toSectionHex(final String hexColor) {
         final String normalized = hexColor.charAt(0) == '#' ? hexColor.substring(1) : hexColor;
         final StringBuilder builder = new StringBuilder(14);
-        builder.append(SECTION).append('x');
+        builder.append(section).append('x');
 
         for (int index = 0; index < normalized.length(); index++) {
-            builder.append(SECTION).append(Character.toLowerCase(normalized.charAt(index)));
+            builder.append(section).append(Character.toLowerCase(normalized.charAt(index)));
         }
 
         return builder.toString();
     }
 }
-

@@ -2,7 +2,7 @@ package ru.paul.wincustomf3.config;
 
 public final class PluginConfig {
 
-    public static final String DEFAULT_BRAND = "&b&lWin&d&lProxy";
+    public static final String defaultBrand = "&b&lWin&d&lProxy";
 
     private final String brand;
     private final AnimationConfig animationConfig;
@@ -18,7 +18,6 @@ public final class PluginConfig {
     }
 
     public static PluginConfig defaultConfig() {
-        return new PluginConfig(DEFAULT_BRAND, new AnimationConfig(false, 500L, java.util.List.of(DEFAULT_BRAND)));
+        return new PluginConfig(defaultBrand, new AnimationConfig(false, 500L, java.util.List.of(defaultBrand)));
     }
 }
-

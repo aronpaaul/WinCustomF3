@@ -10,7 +10,7 @@ import ru.paul.wincustomf3.brand.BrandService;
 
 public final class BrandListener {
 
-    public static final MinecraftChannelIdentifier BRAND_CHANNEL =
+    public static final MinecraftChannelIdentifier brandChannel =
             MinecraftChannelIdentifier.from("minecraft:brand");
 
     private final BrandService brandService;
@@ -23,7 +23,7 @@ public final class BrandListener {
 
     @Subscribe
     public void onPluginMessage(final PluginMessageEvent event) {
-        if (!BRAND_CHANNEL.equals(event.getIdentifier())) {
+        if (!brandChannel.equals(event.getIdentifier())) {
             return;
         }
 
@@ -33,9 +33,8 @@ public final class BrandListener {
 
         event.setResult(PluginMessageEvent.ForwardResult.handled());
 
-        if (!player.sendPluginMessage(BRAND_CHANNEL, brandService.createPayload())) {
+        if (!player.sendPluginMessage(brandChannel, brandService.createPayload())) {
             logger.warn("Не удалось отправить custom brand игроку {}.", player.getUsername());
         }
     }
 }
-

@@ -6,11 +6,11 @@ import java.util.Locale;
 
 public final class GradientFormatter {
 
-    private static final String OPENING_TAG = "<gradient:";
-    private static final String CLOSING_TAG = "</gradient>";
+    private static final String openingTag = "<gradient:";
+    private static final String closingTag = "</gradient>";
 
     public GradientToken tryReadToken(final String input, final int startIndex) {
-        if (!input.regionMatches(true, startIndex, OPENING_TAG, 0, OPENING_TAG.length())) {
+        if (!input.regionMatches(true, startIndex, openingTag, 0, openingTag.length())) {
             return null;
         }
 
@@ -19,13 +19,13 @@ public final class GradientFormatter {
             return null;
         }
 
-        final String rawColors = input.substring(startIndex + OPENING_TAG.length(), openingEnd);
+        final String rawColors = input.substring(startIndex + openingTag.length(), openingEnd);
         final List<String> colors = parseColors(rawColors);
         if (colors.size() < 2) {
             return null;
         }
 
-        final int closingStart = input.toLowerCase(Locale.ROOT).indexOf(CLOSING_TAG, openingEnd + 1);
+        final int closingStart = input.toLowerCase(Locale.ROOT).indexOf(closingTag, openingEnd + 1);
         if (closingStart == -1) {
             return null;
         }
@@ -33,7 +33,7 @@ public final class GradientFormatter {
         return new GradientToken(
                 colors,
                 input.substring(openingEnd + 1, closingStart),
-                closingStart + CLOSING_TAG.length()
+                closingStart + closingTag.length()
         );
     }
 
@@ -177,4 +177,3 @@ public final class GradientFormatter {
     public record GradientToken(List<String> colors, String content, int endIndex) {
     }
 }
-
